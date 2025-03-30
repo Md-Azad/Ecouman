@@ -1,13 +1,23 @@
+import { useContext } from "react";
 import { Link } from "react-router";
+import { AuthContext } from "../../provider/AuthProvider";
 
 const Signup = () => {
+  const { createUser, setLoading } = useContext(AuthContext);
+
   const handleSignup = (e) => {
     e.preventDefault();
     const form = e.target;
     const name = form.name.value;
     const email = form.email.value;
     const password = form.password.value;
-    console.log(name, email, password);
+    createUser(email, password)
+      .then((res) => {
+        console.log(res.user);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
   return (
     <div className="hero bg-base-200 min-h-screen  ">
@@ -41,7 +51,7 @@ const Signup = () => {
             </button>
           </form>
           <h1 className="text-center text-red-400">
-            Already have any account? <Link to="login">Login</Link>
+            Already have any account? <Link to="/login">Login</Link>
           </h1>
         </div>
       </div>
