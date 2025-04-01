@@ -4,7 +4,7 @@ import { AuthContext } from "../../provider/AuthProvider";
 import useAxiosPublic from "../../hooks/useAxiosPublic";
 
 const Signup = () => {
-  const { createUser, setLoading } = useContext(AuthContext);
+  const { createUser } = useContext(AuthContext);
   const axios = useAxiosPublic();
 
   const handleSignup = (e) => {
