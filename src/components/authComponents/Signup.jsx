@@ -1,9 +1,11 @@
 import { useContext } from "react";
 import { Link } from "react-router";
 import { AuthContext } from "../../provider/AuthProvider";
+import useAxiosPublic from "../../hooks/useAxiosPublic";
 
 const Signup = () => {
   const { createUser, setLoading } = useContext(AuthContext);
+  const axios = useAxiosPublic();
 
   const handleSignup = (e) => {
     e.preventDefault();
@@ -13,7 +15,25 @@ const Signup = () => {
     const password = form.password.value;
     createUser(email, password)
       .then((res) => {
-        console.log(res.user);
+        const user = res.user;
+
+        const userData = {
+          name,
+          email,
+          password,
+        };
+        if (user?.email) {
+          axios
+            .post("/users", userData)
+            .then((res) => {
+              if (res?.data?.email) {
+                alert("user saved successfully");
+              }
+            })
+            .catch((err) => {
+              alert(err);
+            });
+        }
       })
       .catch((error) => {
         console.log(error);
