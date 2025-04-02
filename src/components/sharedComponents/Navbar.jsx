@@ -1,10 +1,16 @@
 import { useContext } from "react";
 import { Link, NavLink, useNavigate } from "react-router";
 import { AuthContext } from "../../provider/AuthProvider";
+import { useGetUserQuery } from "../../features/user/userSlice";
 
 const Navbar = () => {
-  const { user, logOut } = useContext(AuthContext);
   const navigate = useNavigate();
+  const { user, logOut } = useContext(AuthContext);
+  const { data, isLoading, isError } = useGetUserQuery(user?.email);
+  if (isLoading) return <p>Loading...</p>;
+  if (isError) return <p>Error fetching data</p>;
+
+  console.log(data);
 
   const handleLogout = () => {
     logOut()
@@ -34,6 +40,11 @@ const Navbar = () => {
       <li className="text-2xl font-bold">
         <NavLink to="/contact">Contact</NavLink>
       </li>
+      {user?.email && (
+        <li className="text-2xl font-bold">
+          <NavLink to="/dashboard">Dashboard</NavLink>
+        </li>
+      )}
     </>
   );
   return (

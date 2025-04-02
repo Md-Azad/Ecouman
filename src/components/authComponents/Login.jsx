@@ -1,11 +1,12 @@
 import { useContext } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { AuthContext } from "../../provider/AuthProvider";
 import useAxiosPublic from "../../hooks/useAxiosPublic";
 
 const Login = () => {
   const { signInUser } = useContext(AuthContext);
   const axios = useAxiosPublic();
+  const navigate = useNavigate();
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -18,7 +19,8 @@ const Login = () => {
         axios
           .post("/users/jwt", user)
           .then((res) => {
-            localStorage.setItem("token", res.data);
+            localStorage.setItem("token", `bearer ${res.data}`);
+            navigate("/");
           })
           .catch((err) => {
             console.log(err);

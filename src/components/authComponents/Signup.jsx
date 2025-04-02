@@ -1,11 +1,12 @@
 import { useContext } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { AuthContext } from "../../provider/AuthProvider";
 import useAxiosPublic from "../../hooks/useAxiosPublic";
 
 const Signup = () => {
   const { createUser } = useContext(AuthContext);
   const axios = useAxiosPublic();
+  const navigate = useNavigate();
 
   const handleSignup = (e) => {
     e.preventDefault();
@@ -33,6 +34,7 @@ const Signup = () => {
             .catch((err) => {
               alert(err);
             });
+          navigate("/");
         }
       })
       .catch((error) => {
