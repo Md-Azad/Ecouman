@@ -1,9 +1,11 @@
 import { useContext } from "react";
 import { Link } from "react-router";
 import { AuthContext } from "../../provider/AuthProvider";
+import useAxiosPublic from "../../hooks/useAxiosPublic";
 
 const Login = () => {
   const { signInUser } = useContext(AuthContext);
+  const axios = useAxiosPublic();
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -12,7 +14,15 @@ const Login = () => {
     const password = form.password.value;
     signInUser(email, password)
       .then((res) => {
-        console.log(res.user);
+        const user = res?.data?.user;
+        axios
+          .post("/users/jwt", user)
+          .then((res) => {
+            localStorage.setItem("token", res.data);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       })
       .catch((err) => {
         console.log(err);

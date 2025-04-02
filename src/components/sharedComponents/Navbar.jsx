@@ -1,13 +1,16 @@
 import { useContext } from "react";
-import { Link, NavLink } from "react-router";
+import { Link, NavLink, useNavigate } from "react-router";
 import { AuthContext } from "../../provider/AuthProvider";
 
 const Navbar = () => {
   const { user, logOut } = useContext(AuthContext);
+  const navigate = useNavigate();
+
   const handleLogout = () => {
     logOut()
       .then(() => {
-        alert("logout successfully");
+        localStorage.removeItem("token");
+        navigate("/");
       })
       .catch((err) => {
         console.log(err);
@@ -17,6 +20,15 @@ const Navbar = () => {
     <>
       <li className="text-2xl font-bold">
         <NavLink to="/">Home</NavLink>
+      </li>
+      <li className="text-2xl font-bold">
+        <NavLink to="/about">About Us</NavLink>
+      </li>
+      <li className="text-2xl font-bold">
+        <NavLink to="/event">Events</NavLink>
+      </li>
+      <li className="text-2xl font-bold">
+        <NavLink to="/donate">Donate</NavLink>
       </li>
 
       <li className="text-2xl font-bold">
@@ -52,8 +64,7 @@ const Navbar = () => {
           </ul>
         </div>
         <Link to="/" className="flex items-center">
-          {/* <img className="w-12" src={logo} alt="" /> */}
-          <h1 className="md:text-3xl font-bold">Prime Real Estate</h1>
+          <h1 className="md:text-3xl font-bold">Ecouman</h1>
         </Link>
       </div>
       <div className="navbar-center hidden lg:flex">
