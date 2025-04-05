@@ -1,48 +1,37 @@
 import { useContext } from "react";
 import { Link, NavLink, useNavigate } from "react-router";
-import { AuthContext } from "../../provider/AuthProvider";
-import { useGetUserQuery } from "../../features/user/userSlice";
+import { AuthContext } from "../../../provider/AuthProvider";
 
-const Navbar = () => {
+const AdminNavbar = () => {
   const navigate = useNavigate();
-  const { user, logOut } = useContext(AuthContext);
-  const { data, isLoading, isError } = useGetUserQuery(user?.email);
-  if (isLoading) return <p>Loading...</p>;
-  if (isError) return <p>Error fetching data</p>;
-
+  const { logOut } = useContext(AuthContext);
   const handleLogout = () => {
     logOut()
       .then(() => {
-        localStorage.removeItem("token");
         navigate("/");
       })
       .catch((err) => {
         console.log(err);
       });
   };
+
   const navLinks = (
     <>
       <li className="text-2xl font-bold">
         <NavLink to="/">Home</NavLink>
       </li>
       <li className="text-2xl font-bold">
-        <NavLink to="/about">About Us</NavLink>
+        <NavLink to="/dashboard/admin/overview">OverView</NavLink>
       </li>
       <li className="text-2xl font-bold">
-        <NavLink to="/event">Events</NavLink>
+        <NavLink to="/dashboard/admin/manageusers">Manage users</NavLink>
       </li>
       <li className="text-2xl font-bold">
-        <NavLink to="/donate">Donate</NavLink>
+        <NavLink to="/dashboard/admin/events">Event Management</NavLink>
       </li>
-
       <li className="text-2xl font-bold">
-        <NavLink to="/contact">Contact</NavLink>
+        <NavLink to="/dashboard/admin/donations">Donations</NavLink>
       </li>
-      {user?.email && (
-        <li className="text-2xl font-bold">
-          <NavLink to={`/dashboard/${data?.role}`}>Dashboard</NavLink>
-        </li>
-      )}
     </>
   );
   return (
@@ -80,29 +69,17 @@ const Navbar = () => {
         <ul className="menu menu-horizontal text-[1rem] px-1">{navLinks}</ul>
       </div>
       <div className="navbar-end">
-        {user?.email ? (
-          <div className="flex items-center gap-4">
-            <img
-              className="w-12 h-12 rounded-full"
-              src={user?.photoURL}
-              alt=""
-            />
-
-            <button
-              onClick={handleLogout}
-              className="btn bg-purple-700 hover:bg-purple-500 text-white"
-            >
-              Logout
-            </button>
-          </div>
-        ) : (
-          <Link to="/login">
-            <button className="btn bg-yellow-600 text-white">Login</button>
-          </Link>
-        )}
+        <div className="flex items-center gap-4">
+          <button
+            onClick={handleLogout}
+            className="btn bg-purple-700 hover:bg-purple-500 text-white"
+          >
+            Logout
+          </button>
+        </div>
       </div>
     </div>
   );
 };
 
-export default Navbar;
+export default AdminNavbar;

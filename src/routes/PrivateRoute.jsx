@@ -1,22 +1,22 @@
-import { useContext } from "react";
-import { AuthContext } from "../provider/AuthProvider";
+// routes/RoleBasedRoute.js
+import { useEffect } from "react";
 import { useNavigate } from "react-router";
-import Contact from "../components/rootComponents/Contact";
+import useRole from "../hooks/useRole";
 
-const PrivateRoute = () => {
-  const { user, loading, setLoading } = useContext(AuthContext);
+const RoleBasedRoute = ({ children, allowedRoles }) => {
+  const [role, isLoading] = useRole();
   const navigate = useNavigate();
 
-  if (loading) {
-    return <p>Loading...</p>;
-  }
-  if (user?.email) {
-    return <Contact />;
-  }
-  if (!user?.emil) {
-    navigate("/login");
-    setLoading(false);
-  }
+  useEffect(() => {
+    if (!isLoading && (!role || !allowedRoles.includes(role))) {
+      navigate("/login");
+    }
+  }, [role, isLoading, navigate, allowedRoles]);
+
+  if (isLoading) return <p>Loading...</p>;
+  if (allowedRoles.includes(role)) return children;
+
+  return null;
 };
 
-export default PrivateRoute;
+export default RoleBasedRoute;
