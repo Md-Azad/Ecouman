@@ -4,7 +4,7 @@ import { AuthContext } from "../../provider/AuthProvider";
 import { useAddUserMutation } from "../../features/user/userSlice";
 
 const Signup = () => {
-  const { createUser } = useContext(AuthContext);
+  const { createUser, updateUser } = useContext(AuthContext);
 
   const navigate = useNavigate();
 
@@ -15,15 +15,24 @@ const Signup = () => {
     const form = e.target;
     const name = form.name.value;
     const email = form.email.value;
+    const photo = form.photo.value;
     const password = form.password.value;
     createUser(email, password)
       .then((res) => {
         const user = res.user;
         if (user?.email) {
+          updateUser(name, photo)
+            .then(() => {
+              alert("user updated successfully");
+            })
+            .catch((err) => {
+              alert(err);
+            });
           addUser({
             name,
             email,
             password,
+            photo,
           });
           navigate("/");
         }
@@ -57,6 +66,13 @@ const Signup = () => {
               name="email"
               className="input w-full"
               placeholder="Email"
+            />
+            <label className="fieldset-label">PhotoURL</label>
+            <input
+              type="text"
+              name="photo"
+              className="input w-full"
+              placeholder="PhotoURL"
             />
             <label className="fieldset-label">Password</label>
             <input

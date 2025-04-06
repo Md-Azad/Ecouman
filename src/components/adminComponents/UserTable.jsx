@@ -40,10 +40,11 @@ const UserTable = ({ user, index }) => {
         </td>
         <td>
           <button
+            onClick={() => handleChangeRole(user?.email, "volunteer")}
             disabled={user?.role === "volunteer"}
             className="btn bg-yellow-400 text-white"
           >
-            Make Vulunteer
+            Make Volunteer
           </button>
         </td>
         <td className="text-left">
