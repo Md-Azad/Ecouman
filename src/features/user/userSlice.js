@@ -5,7 +5,7 @@ export const userSlice = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: "http://localhost:3000",
   }),
-  tagTypes: ["Users"],
+  tagTypes: ["Users", "User"],
   endpoints: (builder) => ({
     getUsers: builder.query({
       query: () => "/users",
@@ -14,7 +14,10 @@ export const userSlice = createApi({
     }),
     getUser: builder.query({
       query: (email) => `/users/${email}`,
-      providesTags: (result, error, email) => [{ type: "Users", id: email }],
+      providesTags: (result, error, arg) => [
+        "Users",
+        { type: "User", id: arg },
+      ],
     }),
     addUser: builder.mutation({
       query: (data) => ({
@@ -24,13 +27,16 @@ export const userSlice = createApi({
       }),
       invalidatesTags: ["Users"],
     }),
-    makeDonor: builder.mutation({
-      query: ({ email, data }) => ({
-        url: `/users/?$email=${email}`,
+    changeRole: builder.mutation({
+      query: ({ email, role }) => ({
+        url: `/users/${email}`,
         method: "PUT",
-        body: data,
+        body: { role },
       }),
-      invalidatesTags: ["Users"],
+      invalidatesTags: (result, error, { email }) => [
+        "Users",
+        { type: "User", id: email },
+      ],
     }),
 
     deleteUser: builder.mutation({
@@ -85,5 +91,6 @@ export const {
   useGetUserQuery,
   useGetUsersQuery,
   useAddUserMutation,
+  useChangeRoleMutation,
   useDeleteUserMutation,
 } = userSlice;

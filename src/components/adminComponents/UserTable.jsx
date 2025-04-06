@@ -1,9 +1,14 @@
-import { useDeleteUserMutation } from "../../features/user/userSlice";
+import {
+  useChangeRoleMutation,
+  useDeleteUserMutation,
+} from "../../features/user/userSlice";
 
 const UserTable = ({ user, index }) => {
   const [deleteUser] = useDeleteUserMutation();
-  const handleMakeDonor = (email) => {
-    console.log(email);
+  const [changeRole] = useChangeRoleMutation();
+  const handleChangeRole = (email, role) => {
+    console.log(email, role);
+    changeRole({ email, role });
   };
   const handleUserDelete = (email) => {
     // console.log(email);
@@ -26,7 +31,7 @@ const UserTable = ({ user, index }) => {
         </td>
         <td>
           <button
-            onClick={() => handleMakeDonor(user?.email)}
+            onClick={() => handleChangeRole(user?.email, "donor")}
             disabled={user?.role === "donor"}
             className="btn bg-yellow-400 text-white"
           >
