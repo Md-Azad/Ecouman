@@ -1,12 +1,14 @@
 import { useContext } from "react";
 import { Link, useNavigate } from "react-router";
 import { AuthContext } from "../../provider/AuthProvider";
-import useAxiosPublic from "../../hooks/useAxiosPublic";
+import { useAddUserMutation } from "../../features/user/userSlice";
 
 const Signup = () => {
   const { createUser } = useContext(AuthContext);
-  const axios = useAxiosPublic();
+
   const navigate = useNavigate();
+
+  const [addUser, { isLoading, isError }] = useAddUserMutation();
 
   const handleSignup = (e) => {
     e.preventDefault();
@@ -17,23 +19,12 @@ const Signup = () => {
     createUser(email, password)
       .then((res) => {
         const user = res.user;
-
-        const userData = {
-          name,
-          email,
-          password,
-        };
         if (user?.email) {
-          axios
-            .post("/users", userData)
-            .then((res) => {
-              if (res?.data?.email) {
-                alert("user saved successfully");
-              }
-            })
-            .catch((err) => {
-              alert(err);
-            });
+          addUser({
+            name,
+            email,
+            password,
+          });
           navigate("/");
         }
       })
@@ -41,6 +32,13 @@ const Signup = () => {
         console.log(error);
       });
   };
+
+  if (isLoading) {
+    return <p>Loading to add user...</p>;
+  }
+  if (isError) {
+    return <p>Opps, there was an error</p>;
+  }
   return (
     <div className="hero bg-base-200 min-h-screen  ">
       <div className="card bg-base-100 w-full max-w-md shrink-0 shadow-2xl">
@@ -69,7 +67,7 @@ const Signup = () => {
             />
 
             <button type="submit" className="btn btn-neutral mt-4">
-              Login
+              Sign up
             </button>
           </form>
           <h1 className="text-center text-red-400">

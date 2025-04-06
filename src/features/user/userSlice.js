@@ -5,15 +5,40 @@ export const userSlice = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: "http://localhost:3000",
   }),
+  tagTypes: ["Users"],
   endpoints: (builder) => ({
     getUsers: builder.query({
       query: () => "/users",
       keepUnusedDataFor: 600,
-      providesTags: ["User"],
+      providesTags: ["Users"],
     }),
     getUser: builder.query({
-      query: (email) => `/users?email=${email}`,
-      providesTags: (result, error, arg) => [{ type: "Video", id: arg }],
+      query: (email) => `/users/${email}`,
+      providesTags: (result, error, email) => [{ type: "Users", id: email }],
+    }),
+    addUser: builder.mutation({
+      query: (data) => ({
+        url: "/users",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["Users"],
+    }),
+    makeDonor: builder.mutation({
+      query: ({ email, data }) => ({
+        url: `/users/?$email=${email}`,
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: ["Users"],
+    }),
+
+    deleteUser: builder.mutation({
+      query: (email) => ({
+        url: `/users/${email}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Users"],
     }),
     // getRelatedVideo: builder.query({
     //   query: (title) => {
@@ -56,4 +81,9 @@ export const userSlice = createApi({
   }),
 });
 
-export const { useGetUserQuery } = userSlice;
+export const {
+  useGetUserQuery,
+  useGetUsersQuery,
+  useAddUserMutation,
+  useDeleteUserMutation,
+} = userSlice;

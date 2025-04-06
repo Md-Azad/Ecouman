@@ -1,24 +1,24 @@
 import { useNavigate } from "react-router";
 import useRole from "../hooks/useRole";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 const AdminRoute = ({ children }) => {
-  const [role, isLoading] = useRole();
+  const [role, isLoading, isError] = useRole();
   const navigate = useNavigate();
-  const [userRole, setUserRole] = useState(role);
 
   useEffect(() => {
-    if (role) {
-      setUserRole(role);
+    if (!isLoading && !role === "admin") {
+      navigate("/login");
     }
   }, [role, isLoading, navigate]);
   if (isLoading) {
-    return <p>loading.... </p>;
+    return <p>Loading...</p>;
+  }
+  if (isError) {
+    return <p>there is something wrong.</p>;
   }
 
-  if (userRole === "admin") return children;
-
-  return null;
+  if (role === "admin") return children;
 };
 
 export default AdminRoute;
