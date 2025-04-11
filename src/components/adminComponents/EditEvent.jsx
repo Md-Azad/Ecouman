@@ -8,28 +8,81 @@ import {
   useGetEventQuery,
 } from "../../features/event/eventSlice";
 const EditEvent = () => {
+  //   const { id } = useParams();
+  //   console.log(id);
+  //   const [eventData, setEventData] = useState({});
+  //   const { data: initalData, isLoading, isError } = useGetEventQuery(id);
+  //   const [editEvents, { data: returnData, isError: error, isLoading: loading }] =
+  //     useEditEventMutation();
+
+  //   useEffect(() => {
+  //     if (!isLoading && !isError) {
+  //       setEventData(initalData);
+  //     } else {
+  //       setEventData({});
+  //     }
+  //   }, [id, initalData, isLoading, isError]);
+
+  //   const { register, handleSubmit, reset } = useForm();
+  //   const { user } = useContext(AuthContext);
+
+  //   const navigate = useNavigate();
+
+  //   if (!error && !loading) {
+  //     console.log(returnData);
+  //   }
+
+  //   const onSubmit = async (data) => {
+  //     const updatedData = {
+  //       createdBy: user?.email,
+  //       eventName: data.event,
+  //       eventLocation: data.location,
+  //       eventDate: data.date,
+  //       description: data.description,
+  //       eventPhoto: data.photo,
+  //       donationNeed: data.donation,
+  //       volunteerNeed: data.volunteer,
+  //     };
+
+  //     if (!error && !loading) {
+  //       editEvents({ id, updatedData });
+  //       navigate("/dashboard/admin/events");
+  //       reset();
+  //     }
+  //   };
   const { id } = useParams();
-  const [eventData, setEventData] = useState({});
-  const { data: initalData, isLoading, isError } = useGetEventQuery(id);
-  const [editEvents, { data: returnData, isError: error, isLoading: loading }] =
-    useEditEventMutation();
-
-  useEffect(() => {
-    if (!isLoading && !isError) {
-      setEventData(initalData);
-    } else {
-      setEventData({});
-    }
-  }, [id, initalData, isLoading, isError]);
-
-  const { register, handleSubmit, reset } = useForm();
+  const { data: eventData, isLoading, isError } = useGetEventQuery(id);
+  const [editEvents] = useEditEventMutation();
   const { user } = useContext(AuthContext);
-
   const navigate = useNavigate();
 
-  if (!error && !loading) {
-    console.log(returnData);
-  }
+  const { register, handleSubmit, reset } = useForm({
+    defaultValues: eventData
+      ? {
+          event: eventData.eventName,
+          location: eventData.eventLocation,
+          photo: eventData.eventPhoto,
+          donation: eventData.donationNeed,
+          volunteer: eventData.volunteerNeed,
+          date: eventData.eventDate?.split("T")[0],
+          description: eventData.description,
+        }
+      : {},
+  });
+
+  useEffect(() => {
+    if (eventData) {
+      reset({
+        event: eventData.eventName,
+        location: eventData.eventLocation,
+        photo: eventData.eventPhoto,
+        donation: eventData.donationNeed,
+        volunteer: eventData.volunteerNeed,
+        date: eventData.eventDate?.split("T")[0],
+        description: eventData.description,
+      });
+    }
+  }, [eventData, reset]);
 
   const onSubmit = async (data) => {
     const updatedData = {
@@ -43,12 +96,16 @@ const EditEvent = () => {
       volunteerNeed: data.volunteer,
     };
 
-    if (!error && !loading) {
-      editEvents(id, updatedData);
+    try {
+      await editEvents({ id, updatedData }).unwrap();
       navigate("/dashboard/admin/events");
-      reset();
+    } catch (error) {
+      console.error("Failed to update event:", error);
     }
   };
+
+  if (isLoading) return <div>Loading...</div>;
+  if (isError) return <div>Error loading event</div>;
 
   return (
     <div className="hero bg-base-200 min-h-screen">

@@ -27,14 +27,11 @@ export const eventSlice = createApi({
       invalidatesTags: ["Events"],
     }),
     editEvent: builder.mutation({
-      query: ({ id, data }) => {
-        console.log(id, { data });
-        ({
-          url: `/events/${id}`,
-          method: "PATCH",
-          body: data,
-        });
-      },
+      query: ({ id, updatedData }) => ({
+        url: `/events/${id}`,
+        method: "PATCH",
+        body: updatedData,
+      }),
 
       invalidatesTags: ["Events"],
     }),
