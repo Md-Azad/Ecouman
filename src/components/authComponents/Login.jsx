@@ -15,9 +15,10 @@ const Login = () => {
     const password = form.password.value;
     signInUser(email, password)
       .then((res) => {
-        const user = res?.data?.user;
+        const user = res.user.email;
+
         axios
-          .post("/users/jwt", user)
+          .post("/users/jwt", { user })
           .then((res) => {
             localStorage.setItem("token", `bearer ${res.data}`);
             navigate("/");
