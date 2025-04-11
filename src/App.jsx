@@ -14,6 +14,7 @@ import ManageUsers from "./components/adminComponents/ManageUsers";
 import EvenManagement from "./components/adminComponents/EvenManagement";
 import Donations from "./components/adminComponents/Donations";
 import AddEvent from "./components/adminComponents/AddEvent";
+import EditEvent from "./components/adminComponents/EditEvent";
 
 function App() {
   return (
@@ -50,6 +51,10 @@ function App() {
           element={<Donations />}
         ></Route>
         <Route path="/dashboard/admin/addEvents" element={<AddEvent />}></Route>
+        <Route
+          path={`/dashboard/admin/editEvents/:id`}
+          element={<EditEvent />}
+        ></Route>
       </Route>
     </Routes>
   );

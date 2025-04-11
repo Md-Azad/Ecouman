@@ -1,24 +1,51 @@
+import { Link } from "react-router";
+
 const EventCard = ({ event }) => {
+  const {
+    eventPhoto,
+    eventName,
+    eventLocation,
+    description,
+    eventDate,
+    donationNeed,
+    donationCollected,
+    volunteerNeed,
+    volunteerGot,
+    createdBy,
+    _id,
+  } = event;
+  const date = eventDate.split("T")[0];
   return (
     <div className="card bg-base-100 w-96 shadow-sm">
       <figure>
-        <img
-          src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
-          alt="Shoes"
-        />
+        <img src={eventPhoto} alt="Shoes" />
       </figure>
       <div className="card-body">
-        <h2 className="card-title">
-          {event?.eventName}
-          <div className="badge badge-secondary">{event?.eventLocation}</div>
-        </h2>
-        <p>
-          A card component has a figure, a body part, and inside body there are
-          title and actions parts
-        </p>
+        <div className="card-title ">
+          {eventName}
+          <div className="badge  "> CreateBy: {createdBy}</div>
+        </div>
+        <p>{description}</p>
+
+        <div>
+          <p>{eventLocation}</p>
+          <h1 className="text-end">{date}</h1>
+          <div className="flex justify-between">
+            <div>
+              <p>Donation Needs: ${donationNeed}</p>
+              <p>Donation Collected:${donationCollected}</p>
+            </div>
+            <div>
+              <p>Volunteer Needs: {volunteerNeed}</p>
+              <p>Donation Collected:{volunteerGot}</p>
+            </div>
+          </div>
+        </div>
         <div className="card-actions justify-end">
-          <div className="badge badge-outline">Fashion</div>
-          <div className="badge badge-outline">Products</div>
+          <Link to={`/dashboard/admin/editEvents/${_id}`}>
+            <button className="btn btn-accent text-white">Edit</button>
+          </Link>
+          <button className="btn btn-error text-white">Delete</button>
         </div>
       </div>
     </div>

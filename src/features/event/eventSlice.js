@@ -12,12 +12,29 @@ export const eventSlice = createApi({
       keepUnusedDataFor: 600,
       providesTags: ["Events"],
     }),
+    getEvent: builder.query({
+      query: (id) => `/events/${id}`,
+      keepUnusedDataFor: 600,
+      providesTags: ["Events"],
+    }),
     addEvent: builder.mutation({
       query: (data) => ({
-        url: "/events/addevent",
+        url: "/events",
         method: "POST",
         body: data,
       }),
+
+      invalidatesTags: ["Events"],
+    }),
+    editEvent: builder.mutation({
+      query: ({ id, data }) => {
+        console.log(id, { data });
+        ({
+          url: `/events/${id}`,
+          method: "PATCH",
+          body: data,
+        });
+      },
 
       invalidatesTags: ["Events"],
     }),
@@ -52,4 +69,9 @@ export const eventSlice = createApi({
   }),
 });
 
-export const { useAddEventMutation, useGetEventsQuery } = eventSlice;
+export const {
+  useAddEventMutation,
+  useGetEventsQuery,
+  useGetEventQuery,
+  useEditEventMutation,
+} = eventSlice;

@@ -4,16 +4,26 @@ export const userSlice = createApi({
   reducerPath: "user",
   baseQuery: fetchBaseQuery({
     baseUrl: "http://localhost:3000",
+    prepareHeaders: (headers) => {
+      // Get token from localStorage (key: "token")
+      const token = localStorage.getItem("token");
+
+      if (token) {
+        // Set the Authorization header
+        headers.set("authorization", ` ${token}`);
+      }
+      return headers;
+    },
   }),
   tagTypes: ["Users", "User"],
   endpoints: (builder) => ({
     getUsers: builder.query({
-      query: () => "/users",
+      query: (email) => `/users/allUser/${email}`,
       keepUnusedDataFor: 600,
       providesTags: ["Users"],
     }),
     getUser: builder.query({
-      query: (email) => `/users/${email}`,
+      query: (email) => `/users/singleuser/${email}`,
       providesTags: (result, error, arg) => [
         "Users",
         { type: "User", id: arg },

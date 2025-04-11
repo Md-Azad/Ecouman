@@ -10,15 +10,15 @@ const EvenManagement = () => {
   if (isError) {
     return <p>Something went wrong.</p>;
   }
-  console.log(data);
+
   return (
     <div>
       <div className=" flex justify-end mx-12">
-        <Link to="/dashboard/admin/addEvents">
+        <Link to={`/dashboard/admin/addEvents`}>
           <button className="btn btn-primary">Add Event</button>
         </Link>
       </div>
-      <h1>{data.length}</h1>
+
       {data.map((item) => (
         <EventCard key={item._id} event={item} />
       ))}

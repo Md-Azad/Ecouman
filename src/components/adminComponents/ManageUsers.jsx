@@ -1,17 +1,18 @@
+import { useContext } from "react";
 import { useGetUsersQuery } from "../../features/user/userSlice";
 import UserTable from "./UserTable";
+import { AuthContext } from "../../provider/AuthProvider";
 
 const ManageUsers = () => {
-  const { data: users, isLoading, isError, isSuccess } = useGetUsersQuery();
+  const { user } = useContext(AuthContext);
+  const { data: users, isLoading, isError } = useGetUsersQuery(user?.email);
   if (isLoading) {
     return <p>Loading...</p>;
   }
   if (isError) {
     return <p>something went wrong.</p>;
   }
-  if (isSuccess) {
-    console.log(users);
-  }
+  console.log(users);
 
   return (
     <div>
